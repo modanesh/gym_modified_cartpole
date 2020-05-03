@@ -17,7 +17,7 @@ sudo pip install -e .
 Python usage:
 ```
 import gym
-import gym_cartpolemod
+import gym_mod_cartpole
 
 env = gym.make('CartPoleMod-v0')
 ```
