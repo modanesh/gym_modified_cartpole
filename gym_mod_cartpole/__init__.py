@@ -6,10 +6,10 @@ logger = logging.getLogger(__name__)
 register(
     id='CartPoleMod-v0',
     entry_point='gym_mod_cartpole.envs:ModCartPoleEnv',
-    kwargs={'case':0},
+    kwargs={'case':0, 'max_episode_steps':500},
 )
 register(
     id='CartPoleMod-v1',
     entry_point='gym_mod_cartpole.envs:ModCartPoleEnv',
-    kwargs={'case':1},
+    kwargs={'case':1, 'max_episode_steps':500}
 )

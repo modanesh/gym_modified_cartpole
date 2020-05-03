@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Classic cart-pole system implemented by Rich Sutton et al.
 Copied from http://incompleteideas.net/sutton/book/code/pole.c
@@ -63,7 +62,7 @@ class ModCartPoleEnv(gym.Env):
         'video.frames_per_second' : 50
     }
 
-    def __init__(self, case):
+    def __init__(self, case, max_episode_steps):
         self.__version__ = "0.1.0"
         self.gravity = 9.8
         self.masscart = 1.0
@@ -73,6 +72,8 @@ class ModCartPoleEnv(gym.Env):
         self.polemass_length = (self.masspole * self.length)
         self.force_mag = 10.0
         self.case = case
+        self._clock = None
+        self.max_episode_steps = max_episode_steps
         self.tau = 0.02  # seconds between state updates
         self.kinematics_integrator = 'euler'
 
@@ -102,6 +103,9 @@ class ModCartPoleEnv(gym.Env):
 
     def step(self, action):
         assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
+
+        self._clock += 1
+
         state = self.state
         x, x_dot, theta, theta_dot = state
 
@@ -143,6 +147,8 @@ class ModCartPoleEnv(gym.Env):
                 or theta < -self.theta_threshold_radians \
                 or theta > self.theta_threshold_radians
         done = bool(done)
+        if not done:
+            done = True if self._clock >= self.max_episode_steps else False
 
         if not done:
             reward = 1.0
@@ -159,6 +165,7 @@ class ModCartPoleEnv(gym.Env):
         return np.array(self.state), reward, done, {}
 
     def reset(self):
+        self._clock = 0
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
         self.steps_beyond_done = None
         return np.array(self.state)
