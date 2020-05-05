@@ -25,7 +25,8 @@ env = gym.make('CartPoleMod-v0')
 ## Environments
 - [x] **CartPoleMod-v0**: have a wind from left to right (L2R). Changes 50% of the **left** actions to **noop**. 
 - [x] **CartPoleMod-v1**: have a wind from right to left (R2L). Changes 50% of the **right** actions to **noop**. 
-- [x] **CartPoleMod-v2**: cart has a friction with the value of **2e-3**. 
+- [x] **CartPoleMod-v2**: there is a friction with the value of **2e-3** applied to the cart. 
+- [x] **CartPoleMod-v3**: there is a friction with the value of **-2e-3** applied to the cart, which makes the surface slippery.
 
 ## TODO
 - [ ] Add new modifications to introduce new environments

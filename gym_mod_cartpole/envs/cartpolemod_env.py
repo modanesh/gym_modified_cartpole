@@ -131,6 +131,8 @@ class ModCartPoleEnv(gym.Env):
         sintheta = math.sin(theta)
         if self.case == 2:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta - self.cart_friction * np.sign(x_dot)) / self.total_mass
+        elif self.case == 3:
+            temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta + self.cart_friction * np.sign(x_dot)) / self.total_mass
         else:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta) / self.total_mass
 
