@@ -2,7 +2,7 @@
 Classic cart-pole system implemented by Rich Sutton et al.
 Copied from http://incompleteideas.net/sutton/book/code/pole.c
 permalink: https://perma.cc/C9ZM-652R
-Modified by Mohamad H. Danesh to include friction and random sensor & actuator noise
+Modified by Mohamad H. Danesh to include wind, and cart friction
 """
 
 import logging
@@ -74,6 +74,7 @@ class ModCartPoleEnv(gym.Env):
         self.case = case
         self._clock = None
         self.max_episode_steps = max_episode_steps
+        self.cart_friction = 2e-3
         self.tau = 0.02  # seconds between state updates
         self.kinematics_integrator = 'euler'
 
@@ -128,7 +129,11 @@ class ModCartPoleEnv(gym.Env):
 
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
-        temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta) / self.total_mass
+        if self.case == 2:
+            temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta - self.cart_friction * np.sign(x_dot)) / self.total_mass
+        else:
+            temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta) / self.total_mass
+
         thetaacc = (self.gravity * sintheta - costheta* temp) / (self.length * (4.0/3.0 - self.masspole * costheta * costheta / self.total_mass))
         xacc  = temp - self.polemass_length * thetaacc * costheta / self.total_mass
         if self.kinematics_integrator == 'euler':
