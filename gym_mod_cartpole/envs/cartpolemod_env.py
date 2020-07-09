@@ -98,7 +98,7 @@ class ModCartPoleEnv(gym.Env):
 
         self.steps_beyond_done = None
 
-        self.anomaly_happen = random.randint(100, 400)
+        self.anomaly_happen = random.randint(100, 250)
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
