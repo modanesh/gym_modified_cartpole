@@ -23,3 +23,13 @@ register(
     entry_point='gym_mod_cartpole.envs:ModCartPoleEnv',
     kwargs={'case':3, 'max_episode_steps':500}
 )
+register(
+    id='CartPoleMod-v4',
+    entry_point='gym_mod_cartpole.envs:ModCartPoleEnv',
+    kwargs={'case':4, 'max_episode_steps':500}
+)
+register(
+    id='CartPoleMod-v5',
+    entry_point='gym_mod_cartpole.envs:ModCartPoleEnv',
+    kwargs={'case':5, 'max_episode_steps':500}
+)
