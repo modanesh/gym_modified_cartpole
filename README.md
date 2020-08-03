@@ -1,6 +1,6 @@
 [under active development]
 
-This repository contains a PIP package which is a modified version of the CartPole OpenAI environment. 
+This repository contains a PIP package containing modified versions of control tasks of OpenAI gym. 
 
 ## Installation
 Install [OpenAI gym](https://gym.openai.com/).
@@ -8,8 +8,8 @@ Install [OpenAI gym](https://gym.openai.com/).
 Then install this package:
 
 ```
-git clone http://github.com/modanesh/gym_modified_cartpole.git
-cd gym_modified_cartpole
+git clone http://github.com/modanesh/modified_gym.git
+cd modified_gym
 sudo pip install -e .
 ```
 
@@ -17,7 +17,7 @@ sudo pip install -e .
 Python usage:
 ```
 import gym
-import gym_mod_cartpole
+import modified_gym
 
 env = gym.make('CartPoleMod-v0')
 ```
@@ -29,6 +29,8 @@ env = gym.make('CartPoleMod-v0')
 - [x] **CartPoleMod-v3**: there is a friction with the value of **-2e-3** applied to the cart, which makes the surface slippery.
 - [x] **CartPoleMod-v4**: anomaly added to the environment. At a random step between (100, 250), a wind from left to right (L2R) starts blowing, like **CartPoleMod-v0** case. 
 - [x] **CartPoleMod-v5**: anomaly added to the environment. At a random step between (100, 250), a wind from right to left (R2L) starts blowing, like **CartPoleMod-v1** case.
+- [x] **AcrobotMod-v0**: have a wind from left to right (L2R). Changes 50% of the **left** actions to **noop**. 
+- [x] **AcrobotMod-v1**: have a wind from right to left (R2L). Changes 50% of the **right** actions to **noop**. 
 
 ## TODO
 - [ ] Add new modifications to introduce new environments

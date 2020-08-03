@@ -1,4 +1,4 @@
 *__pycache__*
 *.pyc
 .idea/
-gym_mod_cartpole.egg-info
+modified_gym.egg-info
