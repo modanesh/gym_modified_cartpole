@@ -113,7 +113,7 @@ class ModCartPoleEnv(gym.Env):
         x, x_dot, theta, theta_dot = state
 
         if action == 1:
-            if self.case == 1:
+            if self.case == 1 or self.case == 6:
                 if random.randint(0, 1):
                     force = self.force_mag
                 else:
@@ -126,7 +126,7 @@ class ModCartPoleEnv(gym.Env):
             else:
                 force = self.force_mag
         else:
-            if self.case == 0:
+            if self.case == 0 or self.case == 6:
                 if random.randint(0, 1):
                     force = -self.force_mag
                 else:

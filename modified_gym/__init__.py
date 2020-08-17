@@ -34,6 +34,11 @@ register(
     kwargs={'case':5, 'max_episode_steps':500}
 )
 register(
+    id='CartPoleMod-v6',
+    entry_point='modified_gym.envs:ModCartPoleEnv',
+    kwargs={'case':6, 'max_episode_steps':500}
+)
+register(
     id='AcorbotMod-v0',
     entry_point='modified_gym.envs:ModAcrobotEnv',
     kwargs={'case':0}
