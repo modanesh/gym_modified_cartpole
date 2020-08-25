@@ -39,12 +39,12 @@ register(
     kwargs={'case':6, 'max_episode_steps':500}
 )
 register(
-    id='AcorbotMod-v0',
+    id='AcrobotMod-v0',
     entry_point='modified_gym.envs:ModAcrobotEnv',
     kwargs={'case':0}
 )
 register(
-    id='AcorbotMod-v1',
+    id='AcrobotMod-v1',
     entry_point='modified_gym.envs:ModAcrobotEnv',
     kwargs={'case':1}
 )

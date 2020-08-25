@@ -99,6 +99,8 @@ class ModCartPoleEnv(gym.Env):
         self.steps_beyond_done = None
 
         self.anomaly_happen = random.randint(100, 250)
+        self.randomness_ratio = 0
+
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -109,35 +111,54 @@ class ModCartPoleEnv(gym.Env):
 
         self._clock += 1
 
-        state = self.state
-        x, x_dot, theta, theta_dot = state
+        x, x_dot, theta, theta_dot = self.state
+        force = self.force_mag if action == 1 else -self.force_mag
 
-        if action == 1:
-            if self.case == 1 or self.case == 6:
+        # Add L2R wind noise
+        if self.case == 0:
+            if action == 0:
                 if random.randint(0, 1):
-                    force = self.force_mag
-                else:
                     force = 0
-            elif self.case == 5 and self._clock > self.anomaly_happen:
+                    self.randomness_ratio += 1
+            elif action == 1:
                 if random.randint(0, 1):
-                    force = self.force_mag
-                else:
-                    force = 0
-            else:
-                force = self.force_mag
-        else:
-            if self.case == 0 or self.case == 6:
+                    force += force
+                    self.randomness_ratio += 1
+        # Add R2L wind noise
+        elif self.case == 1:
+            if action == 1:
                 if random.randint(0, 1):
-                    force = -self.force_mag
-                else:
                     force = 0
-            elif self.case == 4 and self._clock > self.anomaly_happen:
+                    self.randomness_ratio += 1
+            elif action == 0:
                 if random.randint(0, 1):
-                    force = -self.force_mag
-                else:
+                    force += force
+                    self.randomness_ratio += 1
+        # Add L2R wind noise at a random step
+        if self.case == 4 and self._clock > self.anomaly_happen:
+            if action == 0:
+                if random.randint(0, 1):
                     force = 0
-            else:
-                force = -self.force_mag
+                    self.randomness_ratio += 1
+            elif action == 1:
+                if random.randint(0, 1):
+                    force += force
+                    self.randomness_ratio += 1
+        # Add R2L wind noise at a random step
+        elif self.case == 5 and self._clock > self.anomaly_happen:
+            if action == 1:
+                if random.randint(0, 1):
+                    force = 0
+                    self.randomness_ratio += 1
+            elif action == 0:
+                if random.randint(0, 1):
+                    force += force
+                    self.randomness_ratio += 1
+        # Add L2R and R2L wind noise
+        elif self.case == 6:
+            if random.randint(0, 1):
+                force += force
+                self.randomness_ratio += 1
 
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
