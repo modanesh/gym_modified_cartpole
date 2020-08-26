@@ -122,7 +122,7 @@ class ModCartPoleEnv(gym.Env):
                     self.randomness_ratio += 1
             elif action == 1:
                 if random.randint(0, 1):
-                    force += force
+                    # force += force
                     self.randomness_ratio += 1
         # Add R2L wind noise
         elif self.case == 1:
@@ -132,7 +132,7 @@ class ModCartPoleEnv(gym.Env):
                     self.randomness_ratio += 1
             elif action == 0:
                 if random.randint(0, 1):
-                    force += force
+                    # force += force
                     self.randomness_ratio += 1
         # Add L2R wind noise at a random step
         if self.case == 4 and self._clock > self.anomaly_happen:
@@ -142,7 +142,7 @@ class ModCartPoleEnv(gym.Env):
                     self.randomness_ratio += 1
             elif action == 1:
                 if random.randint(0, 1):
-                    force += force
+                    # force += force
                     self.randomness_ratio += 1
         # Add R2L wind noise at a random step
         elif self.case == 5 and self._clock > self.anomaly_happen:
@@ -152,12 +152,12 @@ class ModCartPoleEnv(gym.Env):
                     self.randomness_ratio += 1
             elif action == 0:
                 if random.randint(0, 1):
-                    force += force
+                    # force += force
                     self.randomness_ratio += 1
         # Add L2R and R2L wind noise
         elif self.case == 6:
             if random.randint(0, 1):
-                force += force
+                # force += force
                 self.randomness_ratio += 1
 
         costheta = math.cos(theta)
@@ -208,6 +208,7 @@ class ModCartPoleEnv(gym.Env):
         self._clock = 0
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
         self.steps_beyond_done = None
+        self.randomness_ratio = 0
         return np.array(self.state)
 
     def render(self, mode='human'):
