@@ -141,7 +141,7 @@ class ModCartPoleEnv(gym.Env):
                     is_random = 1
         # Add L2R and R2L wind noise
         elif self.case == 6:
-            if random.randint(0, 1):
+            if random.randint(0, 3) != 0:
                 force = 0
                 is_random = 1
 
