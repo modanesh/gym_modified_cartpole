@@ -96,7 +96,7 @@ class ModAcrobotEnv(core.Env):
         self.state = None
         self.seed()
         self.case = case
-        self.randomness_ratio = 0
+        self.random_steps = []
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -104,7 +104,7 @@ class ModAcrobotEnv(core.Env):
 
     def reset(self):
         self.state = self.np_random.uniform(low=-0.1, high=0.1, size=(4,))
-        self.randomness_ratio = 0
+        self.random_steps = []
         return self._get_ob()
 
     def step(self, a):
@@ -116,31 +116,31 @@ class ModAcrobotEnv(core.Env):
             if torque == -1:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[1]
-                    self.randomness_ratio += 1
+                    is_random = 1
             elif torque == 0:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[2]
-                    self.randomness_ratio += 1
+                    is_random = 1
             elif torque == 1:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[2] + self.AVAIL_TORQUE[2]
-                    self.randomness_ratio += 1
+                    is_random = 1
 
         # Add R2L wind noise
         if self.case == 1:
             if torque == 1:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[1]
-                    self.randomness_ratio += 1
+                    is_random = 1
             elif torque == 0:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[0]
-                    self.randomness_ratio += 1
+                    is_random = 1
             elif torque == -1:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[0] + self.AVAIL_TORQUE[0]
-                    self.randomness_ratio += 1
-
+                    is_random = 1
+        self.random_steps.append(is_random)
         # Add noise to the force action
         if self.torque_noise_max > 0:
             torque += self.np_random.uniform(-self.torque_noise_max, self.torque_noise_max)
