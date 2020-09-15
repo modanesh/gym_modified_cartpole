@@ -114,30 +114,30 @@ class ModAcrobotEnv(core.Env):
         # Add L2R wind noise
         if self.case == 0:
             if torque == -1:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[1]
                     self.randomness_ratio += 1
             elif torque == 0:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[2]
                     self.randomness_ratio += 1
             elif torque == 1:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[2] + self.AVAIL_TORQUE[2]
                     self.randomness_ratio += 1
 
         # Add R2L wind noise
         if self.case == 1:
             if torque == 1:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[1]
                     self.randomness_ratio += 1
             elif torque == 0:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[0]
                     self.randomness_ratio += 1
             elif torque == -1:
-                if random.randint(0, 1):
+                if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[0] + self.AVAIL_TORQUE[0]
                     self.randomness_ratio += 1
 
