@@ -110,7 +110,7 @@ class ModAcrobotEnv(core.Env):
     def step(self, a):
         s = self.state
         torque = self.AVAIL_TORQUE[a]
-
+        is_random = 0
         # Add L2R wind noise
         if self.case == 0:
             if torque == -1:
