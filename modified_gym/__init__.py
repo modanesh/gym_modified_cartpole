@@ -48,3 +48,18 @@ register(
     entry_point='modified_gym.envs:ModAcrobotEnv',
     kwargs={'case':1}
 )
+register(
+    id='LunarLanderMod-v0',
+    entry_point='modified_gym.envs:ModLunarLanderEnv',
+    kwargs={'case':0}
+)
+register(
+    id='LunarLanderMod-v1',
+    entry_point='modified_gym.envs:ModLunarLanderEnv',
+    kwargs={'case':1}
+)
+register(
+    id='LunarLanderMod-v2',
+    entry_point='modified_gym.envs:ModLunarLanderEnv',
+    kwargs={'case':2}
+)
