@@ -112,6 +112,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
         self.reset()
 
         self.case = case
+        self.random_steps = []
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -220,7 +221,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
             self.legs.append(leg)
 
         self.drawlist = [self.lander] + self.legs
-
+        self.random_steps = []
         return self.step(np.array([0, 0]) if self.continuous else 0)[0]
 
     def _create_particle(self, mass, x, y, ttl):
@@ -255,6 +256,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
         side = (-tip[1], tip[0])
         dispersion = [self.np_random.uniform(-1.0, +1.0) / SCALE for _ in range(2)]
 
+        is_random = 0
         m_power = 0.0
         if (self.continuous and action[0] > 0.0) or (not self.continuous and action == 2):
             # Main engine
@@ -267,6 +269,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
                 if self.case == 0 or self.case == 2:
                     if random.randint(0, 2) == 0:
                         m_power = 0.0
+                        is_random = 1
             ox = (tip[0] * (4/SCALE + 2 * dispersion[0]) +
                   side[0] * dispersion[1])  # 4 is move a bit downwards, +-2 for randomness
             oy = -tip[1] * (4/SCALE + 2 * dispersion[0]) - side[1] * dispersion[1]
@@ -297,6 +300,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
                     if random.randint(0, 2) != 0:
                         direction = 0
                         s_power = 0.0
+                        is_random = 1
             ox = tip[0] * dispersion[0] + side[0] * (3 * dispersion[1] + direction * SIDE_ENGINE_AWAY/SCALE)
             oy = -tip[1] * dispersion[0] - side[1] * (3 * dispersion[1] + direction * SIDE_ENGINE_AWAY/SCALE)
             impulse_pos = (self.lander.position[0] + ox - tip[0] * 17/SCALE,
@@ -310,6 +314,8 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
                                            True)
 
         self.world.Step(1.0/FPS, 6*30, 2*30)
+
+        self.random_steps.append(is_random)
 
         pos = self.lander.position
         vel = self.lander.linearVelocity
