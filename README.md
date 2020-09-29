@@ -35,6 +35,7 @@ env = gym.make('CartPoleMod-v0')
 - [x] **LunarLanderMod-v0**: have a wind upwards. Changes 33% of the **main engine fire** actions to **noop**. 
 - [x] **LunarLanderMod-v1**: have a wind from the sides. Changes 66% of the **left/right engine fire** actions to **noop**. 
 - [x] **LunarLanderMod-v2**: have a combination of winds: upwards and from the sides. Changes 33% of the **main engine fire** and 66% of the **left/right engine fire** actions to **noop**. 
+- [x] **MountainCarMod-v2**: have a combination of winds: from left to right (L2R) and right to left (R2L). Changes 75% of the **left** or **right** actions to **noop**. 
 
 ## TODO
 - [ ] Add new modifications to introduce new environments

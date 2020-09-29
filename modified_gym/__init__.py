@@ -63,3 +63,8 @@ register(
     entry_point='modified_gym.envs:ModLunarLanderEnv',
     kwargs={'case':2}
 )
+register(
+    id='MountainCarMod-v2',
+    entry_point='modified_gym.envs:ModMountainCarEnv',
+    kwargs={'case':2}
+)
