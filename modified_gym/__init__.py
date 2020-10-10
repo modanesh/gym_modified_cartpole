@@ -38,6 +38,19 @@ register(
     entry_point='modified_gym.envs:ModCartPoleEnv',
     kwargs={'case':6, 'max_episode_steps':500}
 )
+
+register(
+    id='CartPoleMod-v7',
+    entry_point='modified_gym.envs:ModCartPoleEnv',
+    kwargs={'case':7, 'max_episode_steps':500}
+)
+register(
+    id='CartPoleMod-v8',
+    entry_point='modified_gym.envs:ModCartPoleEnv',
+    kwargs={'case':8, 'max_episode_steps':500}
+)
+
+
 register(
     id='AcrobotMod-v0',
     entry_point='modified_gym.envs:ModAcrobotEnv',

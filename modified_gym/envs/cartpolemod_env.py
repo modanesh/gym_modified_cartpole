@@ -98,9 +98,9 @@ class ModCartPoleEnv(gym.Env):
 
         self.steps_beyond_done = None
 
-        self.anomaly_happen = random.randint(100, 250)
+        self.random_anomaly_step = random.randint(100, 250)
+        self.specific_anomaly_step = 350
         self.random_steps = []
-
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -115,43 +115,51 @@ class ModCartPoleEnv(gym.Env):
         force = self.force_mag if action == 1 else -self.force_mag
 
         is_random = 0
-        # Add L2R wind noise
+        # Add L2R wind noise: case 0
         if self.case == 0:
             if action == 0:
                 if random.randint(0, 1):
                     force = 0
                     is_random = 1
-        # Add R2L wind noise
+        # Add R2L wind noise: case 1
         elif self.case == 1:
             if action == 1:
                 if random.randint(0, 1):
                     force = 0
                     is_random = 1
-        # Add L2R wind noise at a random step
-        if self.case == 4 and self._clock > self.anomaly_happen:
+        # Add L2R wind noise at a random step: case 4
+        elif self.case == 4 and self._clock > self.random_anomaly_step:
             if action == 0:
                 if random.randint(0, 1):
                     force = 0
                     is_random = 1
-        # Add R2L wind noise at a random step
-        elif self.case == 5 and self._clock > self.anomaly_happen:
+        # Add R2L wind noise at a random step: case 5
+        elif self.case == 5 and self._clock > self.random_anomaly_step:
             if action == 1:
                 if random.randint(0, 1):
                     force = 0
                     is_random = 1
-        # Add L2R and R2L wind noise
+        # Add L2R and R2L wind noise: case 6
         elif self.case == 6:
             if random.randint(0, 3) != 0:
                 force = 0
                 is_random = 1
+        # Add small/gradual L2R and R2L wind noise: case 7
+        elif self.case == 7 and self._clock > self.specific_anomaly_step:
+            force = 2 * force / 3
+            is_random = 1
+        # Add sudden/big L2R and R2L wind noise: case 8
+        elif self.case == 8 and self._clock > self.specific_anomaly_step:
+            force = force * 8
+            is_random = 1
 
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
-        # Increasing the surface friction
+        # Increasing the surface friction: case 2
         if self.case == 2:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta - self.cart_friction * np.sign(x_dot)) / self.total_mass
             is_random = 1
-        # Decreasing the surface friction, making it slippery
+        # Decreasing the surface friction, making it slippery: case 3
         elif self.case == 3:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta + self.cart_friction * np.sign(x_dot)) / self.total_mass
             is_random = 1
