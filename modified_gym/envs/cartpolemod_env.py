@@ -62,7 +62,7 @@ class ModCartPoleEnv(gym.Env):
         'video.frames_per_second' : 50
     }
 
-    def __init__(self, case, max_episode_steps):
+    def __init__(self, case, max_episode_steps, horizon=1):
         self.__version__ = "0.1.0"
         self.gravity = 9.8
         self.masscart = 1.0
@@ -100,14 +100,15 @@ class ModCartPoleEnv(gym.Env):
 
         self.random_anomaly_step = random.randint(100, 250)
         self.specific_anomaly_step = 400
-        self.is_random = 0
         self.random_steps = []
+        self.horizon = horizon
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
     def step(self, action):
+        is_random = 0
         assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
 
         self._clock += 1
@@ -120,52 +121,52 @@ class ModCartPoleEnv(gym.Env):
             if action == 0:
                 if random.randint(0, 1):
                     force = 0
-                    self.is_random = 1
+                    is_random = 1
         # Add R2L wind noise: case 1
         elif self.case == 1:
             if action == 1:
                 if random.randint(0, 1):
                     force = 0
-                    self.is_random = 1
+                    is_random = 1
         # Add L2R wind noise at a random step: case 4
         elif self.case == 4 and self._clock > self.random_anomaly_step:
             if action == 0:
                 if random.randint(0, 1):
                     force = 0
-                    self.is_random = 1
+                    is_random = 1
         # Add R2L wind noise at a random step: case 5
         elif self.case == 5 and self._clock > self.random_anomaly_step:
             if action == 1:
                 if random.randint(0, 1):
                     force = 0
-                    self.is_random = 1
+                    is_random = 1
         # Add L2R and R2L wind noise: case 6
         elif self.case == 6:
             if random.randint(0, 3) != 0:
                 force = 0
-                self.is_random = 1
+                is_random = 1
         # Add small/gradual L2R and R2L wind noise: case 7
         elif self.case == 7 and self._clock > self.specific_anomaly_step:
             force = force / 3
-            self.is_random = 1
+            is_random = 1
         # Add sudden/big L2R and R2L wind noise: case 8
-        elif self.case == 8 and self._clock > self.specific_anomaly_step and self._clock % 5 == 0:
-            force = force * 8
-            self.is_random = 1
+        elif self.case == 8 and self._clock % self.horizon == 0:
+            force = force * -1.5
+            is_random = 1
 
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
         # Increasing the surface friction: case 2
         if self.case == 2:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta - self.cart_friction * np.sign(x_dot)) / self.total_mass
-            self.is_random = 1
+            is_random = 1
         # Decreasing the surface friction, making it slippery: case 3
         elif self.case == 3:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta + self.cart_friction * np.sign(x_dot)) / self.total_mass
-            self.is_random = 1
+            is_random = 1
         else:
             temp = (force + self.polemass_length * theta_dot * theta_dot * sintheta) / self.total_mass
-        self.random_steps.append(self.is_random)
+        self.random_steps.append(is_random)
 
         thetaacc = (self.gravity * sintheta - costheta* temp) / (self.length * (4.0/3.0 - self.masspole * costheta * costheta / self.total_mass))
         xacc  = temp - self.polemass_length * thetaacc * costheta / self.total_mass
@@ -206,7 +207,6 @@ class ModCartPoleEnv(gym.Env):
         self._clock = 0
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
         self.steps_beyond_done = None
-        self.is_random = 0
         self.random_steps = []
         return np.array(self.state)
 
