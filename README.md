@@ -31,7 +31,7 @@ env = gym.make('CartPoleMod-v0')
 - [x] **CartPoleMod-v5**: at a random step between (100, 250), a wind from right to left (R2L) starts blowing, like **CartPoleMod-v1** case.
 - [x] **CartPoleMod-v6**: has winds from left to right (L2R) and right to left (R2L). Changes 75% of the **left** or **right** actions to **noop**.
 - [x] **CartPoleMod-v7**: at a specific step (100), a very small and gradual wind from both sides start. Changes actions forces to a fraction of them.
-- [x] **CartPoleMod-v8**: at a specific step (100), a sudden and big wind from both sides start. Multiplies actions forces.
+- [x] **CartPoleMod-v8**: at specific steps depending on horizon, a sudden and big wind from both sides blow. Multiplies and negates actions forces.
 - [x] **AcrobotMod-v0**: has a wind from left to right (L2R). Changes 75% of the **left** actions to **noop**. 
 - [x] **AcrobotMod-v1**: has a wind from right to left (R2L). Changes 75% of the **right** actions to **noop**. 
 - [x] **LunarLanderMod-v0**: has a wind upwards. Changes 33% of the **main engine fire** actions to **noop**. 
