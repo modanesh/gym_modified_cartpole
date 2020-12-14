@@ -87,7 +87,7 @@ class ModAcrobotEnv(core.Env):
     domain_fig = None
     actions_num = 3
 
-    def __init__(self, case):
+    def __init__(self, case, horizon=1):
         self.viewer = None
         high = np.array([1.0, 1.0, 1.0, 1.0, self.MAX_VEL_1, self.MAX_VEL_2], dtype=np.float32)
         low = -high
@@ -95,14 +95,18 @@ class ModAcrobotEnv(core.Env):
         self.action_space = spaces.Discrete(3)
         self.state = None
         self.seed()
+        self._clock = None
         self.case = case
         self.random_steps = []
+        self.specific_anomaly_step = 40
+        self.horizon = horizon
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
     def reset(self):
+        self._clock = 0
         self.state = self.np_random.uniform(low=-0.1, high=0.1, size=(4,))
         self.random_steps = []
         return self._get_ob()
@@ -111,6 +115,8 @@ class ModAcrobotEnv(core.Env):
         s = self.state
         torque = self.AVAIL_TORQUE[a]
         is_random = 0
+        self._clock += 1
+
         # Add L2R wind noise
         if self.case == 0:
             if torque == -1:
@@ -125,9 +131,8 @@ class ModAcrobotEnv(core.Env):
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[2] + self.AVAIL_TORQUE[2]
                     is_random = 1
-
         # Add R2L wind noise
-        if self.case == 1:
+        elif self.case == 1:
             if torque == 1:
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[1]
@@ -140,6 +145,15 @@ class ModAcrobotEnv(core.Env):
                 if random.randint(0, 3) != 0:
                     torque = self.AVAIL_TORQUE[0] + self.AVAIL_TORQUE[0]
                     is_random = 1
+        # Add small/gradual L2R and R2L wind noise: case 7
+        elif self.case == 7 and self._clock > self.specific_anomaly_step:
+            torque = torque / 3
+            is_random = 1
+        # Add sudden/big L2R and R2L wind noise: case 8
+        elif self.case == 8 and self._clock % self.horizon == 0:
+            torque = torque * -1.5
+            is_random = 1
+
         self.random_steps.append(is_random)
         # Add noise to the force action
         if self.torque_noise_max > 0:

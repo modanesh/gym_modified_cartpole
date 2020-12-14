@@ -49,8 +49,6 @@ register(
     entry_point='modified_gym.envs:ModCartPoleEnv',
     kwargs={'case':8, 'max_episode_steps':500}
 )
-
-
 register(
     id='AcrobotMod-v0',
     entry_point='modified_gym.envs:ModAcrobotEnv',
@@ -60,6 +58,16 @@ register(
     id='AcrobotMod-v1',
     entry_point='modified_gym.envs:ModAcrobotEnv',
     kwargs={'case':1}
+)
+register(
+    id='AcrobotMod-v7',
+    entry_point='modified_gym.envs:ModAcrobotEnv',
+    kwargs={'case':7}
+)
+register(
+    id='AcrobotMod-v8',
+    entry_point='modified_gym.envs:ModAcrobotEnv',
+    kwargs={'case':8}
 )
 register(
     id='LunarLanderMod-v0',
