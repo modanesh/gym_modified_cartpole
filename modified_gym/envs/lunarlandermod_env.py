@@ -85,7 +85,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
 
     continuous = False
 
-    def __init__(self, case):
+    def __init__(self, case, horizon=1):
         EzPickle.__init__(self)
         self.seed()
         self.viewer = None
@@ -113,6 +113,10 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
 
         self.case = case
         self.random_steps = []
+        self.specific_anomaly_step = 70
+        self.horizon = horizon
+        self._clock = 0
+
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -222,6 +226,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
 
         self.drawlist = [self.lander] + self.legs
         self.random_steps = []
+        self._clock = 0
         return self.step(np.array([0, 0]) if self.continuous else 0)[0]
 
     def _create_particle(self, mass, x, y, ttl):
@@ -250,7 +255,7 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
             action = np.clip(action, -1, +1).astype(np.float32)
         else:
             assert self.action_space.contains(action), "%r (%s) invalid " % (action, type(action))
-
+        self._clock += 1
         # Engines
         tip  = (math.sin(self.lander.angle), math.cos(self.lander.angle))
         side = (-tip[1], tip[0])
@@ -269,6 +274,12 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
                 if self.case == 0 or self.case == 2:
                     if random.randint(0, 2) == 0:
                         m_power = 0.0
+                        is_random = 1
+                elif self.case == 7 and self._clock > self.specific_anomaly_step:
+                        m_power = m_power * 2/3
+                        is_random = 1
+                elif self.case == 8 and self._clock % self.horizon == 0:
+                        m_power = m_power * -1
                         is_random = 1
             ox = (tip[0] * (4/SCALE + 2 * dispersion[0]) +
                   side[0] * dispersion[1])  # 4 is move a bit downwards, +-2 for randomness
@@ -300,6 +311,14 @@ class ModLunarLanderEnv(gym.Env, EzPickle):
                     if random.randint(0, 2) != 0:
                         direction = 0
                         s_power = 0.0
+                        is_random = 1
+                elif self.case == 7 and self._clock > self.specific_anomaly_step:
+                        direction = direction * 2/3
+                        s_power = s_power * 2/3
+                        is_random = 1
+                elif self.case == 8 and self._clock % self.horizon == 0:
+                        direction = direction * -1
+                        s_power = s_power * -1
                         is_random = 1
             ox = tip[0] * dispersion[0] + side[0] * (3 * dispersion[1] + direction * SIDE_ENGINE_AWAY/SCALE)
             oy = -tip[1] * dispersion[0] - side[1] * (3 * dispersion[1] + direction * SIDE_ENGINE_AWAY/SCALE)
