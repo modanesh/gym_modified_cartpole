@@ -39,6 +39,8 @@ env = gym.make('CartPoleMod-v0')
 - [x] **LunarLanderMod-v0**: has a simulation of upward wind. Changes 33% of the **main engine fire** actions to **noop**. 
 - [x] **LunarLanderMod-v1**: has a simulation of winds from the sides. Changes 66% of the **left/right engine fire** actions to **noop**. 
 - [x] **LunarLanderMod-v2**: has a simulation of combined winds: upwards and from the sides. Changes 33% of the **main engine fire** and 66% of the **left/right engine fire** actions to **noop**. 
+- [x] **LunarLanderMod-v7**: at a specific step has a simulation of a very small and gradual combination of winds starts: upwards and from the sides. Changes actions forces to a fraction of them. 
+- [x] **LunarLanderMod-v8**: at specific steps depending on horizon, a simulation of a sudden and big combination of winds starts: upwards and from the sides. Multiplies and negates actions forces. 
 - [x] **MountainCarMod-v2**: has a simulation of combined winds: from left to right (L2R) and right to left (R2L). Changes 75% of the **left** or **right** actions to **noop**. 
 
 ## TODO
